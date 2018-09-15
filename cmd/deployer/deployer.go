@@ -19,10 +19,10 @@ import (
 	"github.com/dave/jsgo/server/servermsg"
 	"github.com/dave/jsgo/server/wasm/messages"
 	"github.com/dave/services/constor/constormsg"
-	"github.com/dave/wasmgo/cmd/cmdconfig"
-	"github.com/dave/wasmgo/cmd/config"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/browser"
+	"github.com/steveoc64/wasmgo/cmd/cmdconfig"
+	"github.com/steveoc64/wasmgo/cmd/config"
 )
 
 const CLIENT_VERSION = "1.0.0"
@@ -334,7 +334,6 @@ func (d *State) Build() (contents, hash []byte, err error) {
 	if _, err := io.Copy(binarySha, bytes.NewBuffer(binaryBytes)); err != nil {
 		return nil, nil, err
 	}
-
 	return binaryBytes, binarySha.Sum(nil), nil
 }
 

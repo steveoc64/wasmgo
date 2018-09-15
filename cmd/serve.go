@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dave/wasmgo/cmd/server"
 	"github.com/spf13/cobra"
+	"github.com/steveoc64/wasmgo/cmd/server"
 )
 
 func init() {

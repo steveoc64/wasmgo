@@ -11,10 +11,11 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
-	"github.com/dave/wasmgo/cmd/cmdconfig"
-	"github.com/dave/wasmgo/cmd/deployer"
 	"github.com/pkg/browser"
+	"github.com/steveoc64/wasmgo/cmd/cmdconfig"
+	"github.com/steveoc64/wasmgo/cmd/deployer"
 )
 
 func Start(cfg *cmdconfig.Config) error {
@@ -33,7 +34,7 @@ func Start(cfg *cmdconfig.Config) error {
 
 	svr := &server{cfg: cfg, dep: dep, debug: debug}
 
-	s := &http.Server{Addr: fmt.Sprintf(":%d", cfg.Port), Handler: svr}
+	s := &http.Server{Addr: fmt.Sprintf(":%d", cfg.Port), Handler: compressor(svr.ServeHTTP)}
 
 	go func() {
 		fmt.Fprintf(debug, "Starting server on %s\n", s.Addr)
@@ -61,9 +62,11 @@ func Start(cfg *cmdconfig.Config) error {
 }
 
 type server struct {
-	cfg   *cmdconfig.Config
-	dep   *deployer.State
-	debug io.Writer
+	cfg            *cmdconfig.Config
+	dep            *deployer.State
+	debug          io.Writer
+	cached         bool
+	contents, hash []byte
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -72,15 +75,30 @@ func (s *server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		// ignore
 	case strings.HasSuffix(req.RequestURI, "/binary.wasm"):
 		// binary
-		contents, hash, err := s.dep.Build()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-		}
+		t1 := time.Now()
 		w.Header().Set("Content-Type", "application/wasm")
-		if _, err := io.Copy(w, bytes.NewReader(contents)); err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
+		if !s.cached {
+			contents, hash, err := s.dep.Build()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+			}
+			if _, err := io.Copy(w, bytes.NewReader(contents)); err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+			}
+			fmt.Fprintf(s.debug, "Compiled WASM binary with hash %x (%s)\n", hash, time.Since(t1))
+			if s.cfg.Cache {
+				s.cached = true
+				s.contents = make([]byte, len(contents))
+				copy(s.contents, contents)
+				s.hash = make([]byte, len(hash))
+				copy(s.hash, hash)
+			}
+		} else {
+			if _, err := io.Copy(w, bytes.NewReader(s.contents)); err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+			}
+			fmt.Fprintf(s.debug, "Compiled WASM binary from cache%x (%s)\n", s.hash, time.Since(t1))
 		}
-		fmt.Fprintf(s.debug, "Compiled WASM binary with hash %x\n", hash)
 	case strings.HasSuffix(req.RequestURI, "/loader.js"):
 		// loader js
 		contents, _, err := s.dep.Loader("/binary.wasm")

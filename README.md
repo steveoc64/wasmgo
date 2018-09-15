@@ -36,6 +36,7 @@ Deploys the WASM to the [jsgo.io](https://github.com/dave/jsgo) CDN.
 -i, --index string     Specify the index page template. Variables: Script, Loader, Binary. (default "index.wasmgo.html")
 -o, --open             Open the page in a browser. (default true)
 -v, --verbose          Show detailed status messages.
+-q, --cache            Once built, cache and re-use the WebAssembly output
 ```
 
 ### Deploy flags

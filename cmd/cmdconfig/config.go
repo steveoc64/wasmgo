@@ -11,4 +11,5 @@ type Config struct {
 	Flags     string
 	BuildTags string
 	Path      string
+	Cache     bool
 }

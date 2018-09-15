@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dave/wasmgo/cmd/deployer"
 	"github.com/spf13/cobra"
+	"github.com/steveoc64/wasmgo/cmd/deployer"
 )
 
 func init() {
