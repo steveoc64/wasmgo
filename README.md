@@ -4,8 +4,9 @@
 
 This is a fork of https://github.com/dave/wasmgo
 
-> Adds gzip compression on serving the compiled wasm file.
-> Add a `-q` option on serving to cache the compiled result, and skip re-compiling. Moar Speeds.
+- Adds gzip compression on serving the compiled wasm file.
+
+- Add a `-q` option on serving to cache the compiled result, and skip re-compiling. Moar Speeds.
 
 # wasmgo
 
