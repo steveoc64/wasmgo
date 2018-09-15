@@ -88,10 +88,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			fmt.Fprintf(s.debug, "Compiled WASM binary with hash %x (%s)\n", hash, time.Since(t1))
 			if s.cfg.Cache {
 				s.cached = true
-				s.contents = make([]byte, len(contents))
-				copy(s.contents, contents)
-				s.hash = make([]byte, len(hash))
-				copy(s.hash, hash)
+				s.contents = contents
+				s.hash = hash
 			}
 		} else {
 			if _, err := io.Copy(w, bytes.NewReader(s.contents)); err != nil {
