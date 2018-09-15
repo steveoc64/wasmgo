@@ -1,5 +1,12 @@
 <a href="https://patreon.com/davebrophy" title="Help with my hosting bills using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" style="max-width:100%;"></a>
 
+# Fork Info
+
+This is a fork of https://github.com/dave/wasmgo/issues/2 
+
+> Adds gzip compression on serving the compiled wasm file.
+> Add a `-q` option on serving to cache the compiled result, and skip re-compiling. Moar Speeds.
+
 # wasmgo
 
 The `wasmgo` command compiles Go to WASM, and serves the binary locally or deploys to the [jsgo.io](https://github.com/dave/jsgo) CDN.
@@ -7,7 +14,7 @@ The `wasmgo` command compiles Go to WASM, and serves the binary locally or deplo
 ### Install
 
 ```
-go get -u github.com/dave/wasmgo
+go get -u github.com/steveoc64/wasmgo
 ```
 
 ### Serve command
@@ -61,7 +68,7 @@ Omit the package argument to use the code in the current directory.
 Here's a simple hello world:
 
 ```
-wasmgo serve github.com/dave/wasmgo/helloworld
+wasmgo serve github.com/steveoc64/wasmgo/helloworld
 ```
 
 The page (http://localhost:8080/) opens in a browser.
