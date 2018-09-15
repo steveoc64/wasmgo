@@ -6,7 +6,7 @@ This is a fork of https://github.com/dave/wasmgo
 
 - Adds gzip compression on serving the compiled wasm file.
 
-- Add a `-q` option for `wasmgo serve` to cache the compiled result after the first build. Useful if you want to use browser refresh to stes / debug / iterate quickly through app startup with the overhead of re-compiling each time around.
+- Add a `-q` option for `wasmgo serve` to cache the compiled result after the first build. Useful if you want to use browser refresh to test / debug / iterate quickly through app startup with the overhead of re-compiling each time around.
 
 # wasmgo
 
